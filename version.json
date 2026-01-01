@@ -1,6 +1,8 @@
 {
-  "latest_version": "1.0.0",
+  "latest_version": "1.0.2",
   "min_supported_version": "1.0.0",
-  "download_url": "https://github.com/MohamedRadyElfeky/MRady-Fanny/releases/latest",
-  "release_notes": "- إطلاق النسخة الأولى من التطبيق\n- نظام تذاكر متكامل\n- دعم المرفقات والبحث المتقدم"
+  "android_url": "...",
+  "ios_url": "...",
+  "windows_url": "...",
+  "release_notes": "..."
 }
