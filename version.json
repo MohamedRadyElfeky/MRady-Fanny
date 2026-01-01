@@ -1,8 +1,12 @@
 {
-  "latest_version": "1.0.2",
+  "latest_version": "1.0.1",
   "min_supported_version": "1.0.0",
-  "android_url": "...",
-  "ios_url": "...",
-  "windows_url": "...",
-  "release_notes": "..."
+  "download_url": "https://example.com/fallback.apk",
+  "android_url": "https://example.com/universal.apk",
+  "android_arm64_url": "https://example.com/app-arm64-v8a.apk",
+  "android_arm_url": "https://example.com/app-armeabi-v7a.apk",
+  "android_x86_64_url": "https://example.com/app-x86_64.apk",
+  "ios_url": "https://apps.apple.com/app/id123456789",
+  "windows_url": "https://people.com/app.exe",
+  "release_notes": "- دعم تعدد المعالجات (Split APKs)\n- تحسينات عامة"
 }
