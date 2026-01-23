@@ -1,5 +1,5 @@
 {
-  "latest_version": "1.0.9",
+  "latest_version": "1.0.10",
   "min_supported_version": "1.0.9",
   "download_url": "https://example.com/fallback.apk",
   "android_url": "https://github.com/MohamedRadyElfeky/MRady-Fanny/releases/download/1.0.9/MR_Fanny_v1.0.9_universal.apk",
@@ -10,6 +10,7 @@
   "windows_url": "https://people.com/app.exe",
   "release_notes": "- اصلاح الاخطاء \n- اضافة مميزات جديدة"
 }
+
 
 
 
