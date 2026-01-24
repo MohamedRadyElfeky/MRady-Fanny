@@ -1,15 +1,16 @@
 {
-  "latest_version": "1.1.0",
-  "min_supported_version": "1.1.0",
+  "latest_version": "1.1.1",
+  "min_supported_version": "1.1.1",
   "download_url": "https://example.com/fallback.apk",
-  "android_url": "https://github.com/MohamedRadyElfeky/MRady-Fanny/releases/download/1.1.0/MR_Fanny_v1.1.0_universal.apk",
-  "android_arm64_url": "https://github.com/MohamedRadyElfeky/MRady-Fanny/releases/download/1.1.0/MR_Fanny_v1.1.0_arm64-v8a.apk",
-  "android_arm_url": "https://github.com/MohamedRadyElfeky/MRady-Fanny/releases/download/1.1.0/MR_Fanny_v1.1.0_armeabi-v7a.apk",
-  "android_x86_64_url": "https://github.com/MohamedRadyElfeky/MRady-Fanny/releases/download/1.1.0/MR_Fanny_v1.1.0_x86_64.apk",
+  "android_url": "https://github.com/MohamedRadyElfeky/MRady-Fanny/releases/download/1.1.1/MR_Fanny_v1.1.1_universal.apk",
+  "android_arm64_url": "https://github.com/MohamedRadyElfeky/MRady-Fanny/releases/download/1.1.1/MR_Fanny_v1.1.1_arm64-v8a.apk",
+  "android_arm_url": "https://github.com/MohamedRadyElfeky/MRady-Fanny/releases/download/1.1.1/MR_Fanny_v1.1.1_armeabi-v7a.apk",
+  "android_x86_64_url": "https://github.com/MohamedRadyElfeky/MRady-Fanny/releases/download/1.1.1/MR_Fanny_v1.1.1_x86_64.apk",
   "ios_url": "https://apps.apple.com/app/id123456789",
   "windows_url": "https://people.com/app.exe",
   "release_notes": "- اصلاح الاخطاء \n- اضافة مميزات جديدة"
 }
+
 
 
 
