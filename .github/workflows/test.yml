@@ -1,0 +1,10 @@
+name: Test Workflow
+
+on: [push]  # يعمل هذا الكود عند عمل Push
+
+jobs:
+  test-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Say Hello
+        run: echo "GitHub Actions is working correctly on this free account!"
