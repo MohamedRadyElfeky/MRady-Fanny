@@ -1,136 +1,269 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MRady | Fanny - مركز التحميل</title>
-    <!-- Tailwind CSS للتحكم في التصميم الاحترافي -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Tajawal', sans-serif; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; color: white; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; }
-        .loader { border-top-color: #3b82f6; animation: spinner 1.5s linear infinite; }
-        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>MR | Fanny - Smart Download Center</title>
+
+<meta name="description" content="الصفحة الرسمية لتحميل تطبيق MR | Fanny">
+<meta name="theme-color" content="#020617">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<style>
+body{
+font-family:'Tajawal',sans-serif;
+background:
+radial-gradient(circle at top right,#1e40af 0%,transparent 30%),
+radial-gradient(circle at bottom left,#0f766e 0%,transparent 30%),
+linear-gradient(135deg,#020617,#0f172a,#111827);
+min-height:100vh;
+color:white;
+overflow-x:hidden;
+}
+
+.glass{
+background:rgba(255,255,255,.06);
+backdrop-filter:blur(18px);
+border:1px solid rgba(255,255,255,.08);
+}
+
+.float{
+animation:float 4s ease-in-out infinite;
+}
+
+@keyframes float{
+0%,100%{transform:translateY(0)}
+50%{transform:translateY(-10px)}
+}
+
+.loader{
+border-top-color:#3b82f6;
+animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+100%{transform:rotate(360deg)}
+}
+
+.fadein{
+animation:fade .8s ease forwards;
+}
+
+@keyframes fade{
+from{opacity:0;transform:translateY(20px)}
+to{opacity:1;transform:translateY(0)}
+}
+</style>
 </head>
-<body class="p-4">
 
-<div class="glass w-full max-w-lg p-8 text-center shadow-2xl">
-    <!-- Branding -->
-    <div class="mb-6">
-        <h1 class="text-3xl font-bold tracking-tight text-blue-400">MRady <span class="text-white">| Fanny</span></h1>
-        <p class="text-gray-400 mt-2 text-sm">التحميل الذكي للتطبيق</p>
-    </div>
+<body class="p-4 flex items-center justify-center">
 
-    <div id="status-container">
-        <!-- Loading State -->
-        <div id="loading" class="space-y-4">
-            <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-700 h-12 w-12 mx-auto"></div>
-            <p class="text-lg animate-pulse">جاري فحص توافق الجهاز...</p>
-        </div>
+<div class="max-w-6xl w-full grid lg:grid-cols-2 gap-8 items-center">
 
-        <!-- Result State (Hidden by default) -->
-        <div id="result" class="hidden space-y-6">
-            <div id="icon-success" class="bg-blue-500/20 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-            </div>
-            <h2 id="msg-title" class="text-xl font-bold">تم العثور على النسخة المناسبة</h2>
-            <p id="msg-desc" class="text-gray-400">بدأ التحميل التلقائي لإصدار <span id="ver-num" class="text-blue-300 font-mono">...</span></p>
-            
-            <a id="direct-link" href="#" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl transition-all transform hover:scale-105 shadow-lg shadow-blue-900/20">
-                تحميل الآن يدويًا
-            </a>
-        </div>
+<!-- Left -->
+<div class="fadein">
 
-        <!-- Fallback List (Hidden by default) -->
-        <div id="fallback" class="hidden text-right space-y-4 mt-6 border-t border-white/10 pt-6">
-            <p class="text-sm text-yellow-400 text-center">لم يتم التعرف على المعمارية بدقة، اختر النسخة المناسبة لجهازك:</p>
-            <ul id="assets-list" class="space-y-2"></ul>
-        </div>
-    </div>
+<div class="mb-6">
+<div class="text-6xl mb-4 float">📦</div>
+
+<h1 class="text-5xl font-black leading-tight text-blue-400">
+MR <span class="text-white">| Fanny</span>
+</h1>
+
+<p class="text-gray-300 mt-4 text-xl">
+مركز التحميل الذكي الرسمي للتطبيق
+</p>
+</div>
+
+<div class="space-y-4 text-gray-300">
+
+<div>✅ كشف نوع الجهاز تلقائياً</div>
+<div>✅ تحميل أسرع نسخة مناسبة</div>
+<div>✅ تحديث مباشر من GitHub</div>
+<div>✅ آمن وسريع واحترافي</div>
+
+</div>
+
+<div class="mt-8 glass rounded-3xl p-5">
+
+<h3 class="font-bold text-cyan-300 mb-3">
+👨‍💻 المطور
+</h3>
+
+<p class="font-bold text-lg">
+Mohamed Rady El Feky
+</p>
+
+<p class="text-gray-400 mt-2">
+Cloud Systems Engineer • Odoo Expert • Full Stack Developer
+</p>
+
+<div class="mt-4 flex gap-3 flex-wrap">
+
+<a href="https://github.com/mohamedradyelfeky"
+target="_blank"
+class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 transition">
+GitHub
+</a>
+
+<a href="mailto:info@elmohtarfeen.work"
+class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 transition">
+Email
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- Right -->
+<div class="glass rounded-3xl p-8 shadow-2xl fadein">
+
+<div id="loading" class="text-center">
+
+<div class="loader rounded-full border-4 border-gray-700 h-16 w-16 mx-auto"></div>
+
+<h2 class="text-2xl font-bold mt-5">
+جاري فحص جهازك...
+</h2>
+
+<p class="text-gray-400 mt-2">
+يرجى الانتظار لحظات
+</p>
+
+</div>
+
+<div id="result" class="hidden text-center">
+
+<div class="text-6xl mb-4">🚀</div>
+
+<h2 class="text-3xl font-black mb-3">
+جاهز للتحميل
+</h2>
+
+<p class="text-gray-300 mb-2">
+الإصدار:
+<span id="ver" class="text-blue-300 font-bold"></span>
+</p>
+
+<p class="text-gray-400 mb-6" id="device"></p>
+
+<a id="downloadBtn"
+href="#"
+class="block w-full py-4 rounded-2xl bg-blue-600 hover:bg-blue-700 transition text-xl font-bold shadow-xl">
+⬇ تحميل الآن
+</a>
+
+<button onclick="copyLink()"
+class="mt-4 w-full py-3 rounded-2xl bg-white/10 hover:bg-white/20 transition">
+📋 نسخ رابط التحميل
+</button>
+
+</div>
+
+<div id="error" class="hidden text-center">
+
+<div class="text-6xl mb-4">⚠️</div>
+
+<h2 class="text-2xl font-bold text-red-400">
+حدث خطأ
+</h2>
+
+<p class="text-gray-400 mt-2">
+تعذر تحميل بيانات الإصدار
+</p>
+
+</div>
+
+<div class="mt-8 border-t border-white/10 pt-5 text-center text-sm text-gray-500">
+
+© 2026 MR | Fanny PRO Edition
+
+</div>
+
+</div>
+
 </div>
 
 <script>
-    // الإعدادات الخاصة بك بناءً على حسابك الظاهر في الصورة
-    const CONFIG = {
-        owner: 'mohamedradyelfeky',
-        repo: 'MRady-Fanny',
-        jsonPath: './version.json' // سيقرأ من ملفك الذي يتم تحديثه تلقائياً
-    };
+const CONFIG = {
+json: "./version.json"
+};
 
-    async function initDownload() {
-        const loading = document.getElementById('loading');
-        const result = document.getElementById('result');
-        const fallback = document.getElementById('fallback');
-        const verNum = document.getElementById('ver-num');
-        const directLink = document.getElementById('direct-link');
-        const assetsList = document.getElementById('assets-list');
+let finalLink = "#";
 
-        try {
-            // 1. محاولة جلب البيانات من ملف version.json أولاً لأنه يحتوي على تقسيم المعماريات
-            const response = await fetch(CONFIG.jsonPath);
-            if (!response.ok) throw new Error('JSON not found');
-            const data = await response.json();
+async function init(){
 
-            verNum.innerText = data.latest_version;
-            const userAgent = navigator.userAgent.toLowerCase();
-            let targetUrl = null;
+const loading = document.getElementById("loading");
+const result  = document.getElementById("result");
+const error   = document.getElementById("error");
 
-            // 2. منطق التوجيه الذكي بناءً على الجهاز والمعمارية
-            if (userAgent.includes("android")) {
-                // محاولة تحديد المعمارية إذا كانت متوفرة في الـ UserAgent (نادر ولكن ممكن)
-                targetUrl = data.android_url || data.android_arm64_url;
-            } else if (userAgent.includes("windows")) {
-                targetUrl = data.windows_url;
-            } else if (userAgent.includes("iphone") || userAgent.includes("ipad")) {
-                targetUrl = data.ios_url;
-            }
+try{
 
-            loading.classList.add('hidden');
-            result.classList.remove('hidden');
+const res = await fetch(CONFIG.json + "?v=" + Date.now());
+if(!res.ok) throw new Error();
 
-            if (targetUrl) {
-                directLink.href = targetUrl;
-                window.location.href = targetUrl;
-            } else {
-                // إذا لم نجد رابطاً مباشراً، نظهر القائمة بالكامل
-                document.getElementById('msg-title').innerText = "اختر النسخة المناسبة";
-                document.getElementById('msg-desc').innerText = "يرجى اختيار ملف التحميل المناسب لنوع هاتفك:";
-                fallback.classList.remove('hidden');
-                
-                // بناء قائمة الروابط المتاحة
-                const keys = {
-                    'android_arm64_url': 'Android (ARM64)',
-                    'android_arm_url': 'Android (ARMv7)',
-                    'android_x86_64_url': 'Android (x86_64)',
-                    'android_url': 'Android (Universal)',
-                    'windows_url': 'Windows (exe)',
-                    'ios_url': 'iOS (ipa)'
-                };
+const data = await res.json();
 
-                for (const [key, label] of Object.entries(keys)) {
-                    if (data[key]) {
-                        const li = document.createElement('li');
-                        li.innerHTML = `<a href="${data[key]}" class="block p-3 bg-white/5 hover:bg-white/10 rounded-lg border border-white/5 transition-colors">📦 ${label}</a>`;
-                        assetsList.appendChild(li);
-                    }
-                }
-            }
+const ua = navigator.userAgent.toLowerCase();
 
-        } catch (error) {
-            console.error(error);
-            loading.innerHTML = `
-                <div class="text-red-400 mb-4">⚠️</div>
-                <h2 class="text-xl font-bold">حدث خطأ في جلب البيانات</h2>
-                <p class="text-gray-400 mt-2">تأكد من وجود ملف version.json أو قم بزيارة <a href="https://github.com/${CONFIG.owner}/${CONFIG.repo}/releases" class="text-blue-400 underline">صفحة الإصدارات</a></p>
-            `;
-        }
-    }
+let link = data.android_url;
+let device = "Android";
 
-    window.onload = initDownload;
+if(ua.includes("windows")){
+link = data.windows_url || data.android_url;
+device = "Windows";
+}
+else if(ua.includes("iphone") || ua.includes("ipad")){
+link = data.ios_url || data.android_url;
+device = "iPhone / iPad";
+}
+else if(ua.includes("mac")){
+link = data.mac_url || data.windows_url || data.android_url;
+device = "Mac";
+}
+else if(ua.includes("android")){
+device = "Android";
+}
+
+finalLink = link;
+
+document.getElementById("ver").innerText =
+data.latest_version || "Latest";
+
+document.getElementById("device").innerText =
+"الجهاز المكتشف: " + device;
+
+document.getElementById("downloadBtn").href = link;
+
+loading.classList.add("hidden");
+result.classList.remove("hidden");
+
+setTimeout(()=>{
+window.location.href = link;
+},1800);
+
+}catch(e){
+
+loading.classList.add("hidden");
+error.classList.remove("hidden");
+
+}
+}
+
+function copyLink(){
+navigator.clipboard.writeText(finalLink);
+alert("تم نسخ الرابط");
+}
+
+window.onload = init;
 </script>
+
 </body>
 </html>
