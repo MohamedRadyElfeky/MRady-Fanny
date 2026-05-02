@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-<title>MR | Fanny - Smart Download Center</title>
+<title>MR | Fanny PRO V2</title>
 
-<meta name="description" content="الصفحة الرسمية لتحميل تطبيق MR | Fanny">
+<meta name="description" content="مركز التحميل الذكي الرسمي">
 <meta name="theme-color" content="#020617">
 
 <script src="https://cdn.tailwindcss.com"></script>
@@ -18,8 +19,8 @@
 body{
 font-family:'Tajawal',sans-serif;
 background:
-radial-gradient(circle at top right,#1e40af 0%,transparent 30%),
-radial-gradient(circle at bottom left,#0f766e 0%,transparent 30%),
+radial-gradient(circle at top right,#1d4ed8 0%,transparent 30%),
+radial-gradient(circle at bottom left,#0891b2 0%,transparent 30%),
 linear-gradient(135deg,#020617,#0f172a,#111827);
 min-height:100vh;
 color:white;
@@ -32,15 +33,6 @@ backdrop-filter:blur(18px);
 border:1px solid rgba(255,255,255,.08);
 }
 
-.float{
-animation:float 4s ease-in-out infinite;
-}
-
-@keyframes float{
-0%,100%{transform:translateY(0)}
-50%{transform:translateY(-10px)}
-}
-
 .loader{
 border-top-color:#3b82f6;
 animation:spin 1s linear infinite;
@@ -50,82 +42,70 @@ animation:spin 1s linear infinite;
 100%{transform:rotate(360deg)}
 }
 
-.fadein{
-animation:fade .8s ease forwards;
+.float{
+animation:float 4s ease-in-out infinite;
 }
 
-@keyframes fade{
-from{opacity:0;transform:translateY(20px)}
-to{opacity:1;transform:translateY(0)}
+@keyframes float{
+0%,100%{transform:translateY(0)}
+50%{transform:translateY(-8px)}
 }
 </style>
+
 </head>
 
 <body class="p-4 flex items-center justify-center">
 
-<div class="max-w-6xl w-full grid lg:grid-cols-2 gap-8 items-center">
+<div class="max-w-6xl w-full grid lg:grid-cols-2 gap-8">
 
-<!-- Left -->
-<div class="fadein">
+<!-- Left Side -->
+<div class="space-y-6">
 
-<div class="mb-6">
-<div class="text-6xl mb-4 float">📦</div>
+<div>
+<div class="text-6xl mb-4 float">🚀</div>
 
-<h1 class="text-5xl font-black leading-tight text-blue-400">
+<h1 class="text-5xl font-black text-blue-400">
 MR <span class="text-white">| Fanny</span>
 </h1>
 
-<p class="text-gray-300 mt-4 text-xl">
-مركز التحميل الذكي الرسمي للتطبيق
+<p class="text-xl text-gray-300 mt-4">
+مركز التحميل الذكي الرسمي
 </p>
 </div>
 
-<div class="space-y-4 text-gray-300">
+<div class="glass rounded-3xl p-6 space-y-3">
 
 <div>✅ كشف نوع الجهاز تلقائياً</div>
-<div>✅ تحميل أسرع نسخة مناسبة</div>
-<div>✅ تحديث مباشر من GitHub</div>
-<div>✅ آمن وسريع واحترافي</div>
+<div>✅ عدم التحويل إلى undefined نهائياً</div>
+<div>✅ صفحة بديلة للتحميل اليدوي</div>
+<div>✅ سرعة عالية عبر GitHub Pages</div>
+<div>✅ تحديث مباشر من GitHub Releases</div>
 
 </div>
 
-<div class="mt-8 glass rounded-3xl p-5">
+<div class="glass rounded-3xl p-6">
 
 <h3 class="font-bold text-cyan-300 mb-3">
 👨‍💻 المطور
 </h3>
 
-<p class="font-bold text-lg">
+<p class="text-xl font-bold">
 Mohamed Rady El Feky
 </p>
 
 <p class="text-gray-400 mt-2">
-Cloud Systems Engineer • Odoo Expert • Full Stack Developer
+Cloud Systems Engineer • Full Stack Developer
 </p>
 
-<div class="mt-4 flex gap-3 flex-wrap">
-
-<a href="https://github.com/mohamedradyelfeky"
-target="_blank"
-class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 transition">
-GitHub
-</a>
-
-<a href="mailto:info@elmohtarfeen.work"
-class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 transition">
-Email
-</a>
-
 </div>
 
 </div>
 
-</div>
+<!-- Right Side -->
+<div class="glass rounded-3xl p-8 text-center">
 
-<!-- Right -->
-<div class="glass rounded-3xl p-8 shadow-2xl fadein">
-
-<div id="loading" class="text-center">
+<!-- Loading -->
+<div id="loading">
 
 <div class="loader rounded-full border-4 border-gray-700 h-16 w-16 mx-auto"></div>
 
@@ -134,17 +114,18 @@ Email
 </h2>
 
 <p class="text-gray-400 mt-2">
-يرجى الانتظار لحظات
+يرجى الانتظار
 </p>
 
 </div>
 
-<div id="result" class="hidden text-center">
+<!-- Success -->
+<div id="result" class="hidden">
 
-<div class="text-6xl mb-4">🚀</div>
+<div class="text-6xl mb-4">📦</div>
 
 <h2 class="text-3xl font-black mb-3">
-جاهز للتحميل
+تم العثور على النسخة المناسبة
 </h2>
 
 <p class="text-gray-300 mb-2">
@@ -156,35 +137,52 @@ Email
 
 <a id="downloadBtn"
 href="#"
-class="block w-full py-4 rounded-2xl bg-blue-600 hover:bg-blue-700 transition text-xl font-bold shadow-xl">
+class="block w-full py-4 rounded-2xl bg-blue-600 hover:bg-blue-700 transition text-xl font-bold">
 ⬇ تحميل الآن
 </a>
 
 <button onclick="copyLink()"
 class="mt-4 w-full py-3 rounded-2xl bg-white/10 hover:bg-white/20 transition">
-📋 نسخ رابط التحميل
+📋 نسخ الرابط
 </button>
 
 </div>
 
-<div id="error" class="hidden text-center">
+<!-- Unsupported -->
+<div id="unsupported" class="hidden">
+
+<div class="text-6xl mb-4">📱</div>
+
+<h2 class="text-2xl font-bold text-yellow-400">
+لا يوجد إصدار متوافق حالياً
+</h2>
+
+<p id="unknownDevice" class="text-gray-400 mt-3"></p>
+
+<a href="./downloads.html"
+class="mt-5 inline-block px-6 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 transition">
+عرض كل النسخ
+</a>
+
+</div>
+
+<!-- Error -->
+<div id="error" class="hidden">
 
 <div class="text-6xl mb-4">⚠️</div>
 
 <h2 class="text-2xl font-bold text-red-400">
-حدث خطأ
+تعذر قراءة بيانات الإصدار
 </h2>
 
-<p class="text-gray-400 mt-2">
-تعذر تحميل بيانات الإصدار
+<p class="text-gray-400 mt-3">
+تحقق من version.json
 </p>
 
 </div>
 
-<div class="mt-8 border-t border-white/10 pt-5 text-center text-sm text-gray-500">
-
-© 2026 MR | Fanny PRO Edition
-
+<div class="mt-8 border-t border-white/10 pt-5 text-sm text-gray-500">
+© 2026 MR | Fanny PRO V2
 </div>
 
 </div>
@@ -201,36 +199,47 @@ let finalLink = "#";
 async function init(){
 
 const loading = document.getElementById("loading");
-const result  = document.getElementById("result");
-const error   = document.getElementById("error");
+const result = document.getElementById("result");
+const unsupported = document.getElementById("unsupported");
+const error = document.getElementById("error");
 
 try{
 
 const res = await fetch(CONFIG.json + "?v=" + Date.now());
-if(!res.ok) throw new Error();
+
+if(!res.ok) throw new Error("JSON Error");
 
 const data = await res.json();
 
 const ua = navigator.userAgent.toLowerCase();
 
-let link = data.android_url;
-let device = "Android";
+let link = null;
+let device = "Unknown Device";
 
-if(ua.includes("windows")){
-link = data.windows_url || data.android_url;
+if(ua.includes("android")){
+link = data.android_url || data.android_arm64_url || null;
+device = "Android";
+}
+else if(ua.includes("windows")){
+link = data.windows_url || null;
 device = "Windows";
 }
 else if(ua.includes("iphone") || ua.includes("ipad")){
-link = data.ios_url || data.android_url;
+link = data.ios_url || null;
 device = "iPhone / iPad";
 }
 else if(ua.includes("mac")){
-link = data.mac_url || data.windows_url || data.android_url;
+link = data.mac_url || null;
 device = "Mac";
 }
-else if(ua.includes("android")){
-device = "Android";
+else if(ua.includes("linux")){
+link = data.linux_url || null;
+device = "Linux";
 }
+
+loading.classList.add("hidden");
+
+if(link){
 
 finalLink = link;
 
@@ -242,12 +251,20 @@ document.getElementById("device").innerText =
 
 document.getElementById("downloadBtn").href = link;
 
-loading.classList.add("hidden");
 result.classList.remove("hidden");
 
 setTimeout(()=>{
 window.location.href = link;
 },1800);
+
+}else{
+
+unsupported.classList.remove("hidden");
+
+document.getElementById("unknownDevice").innerText =
+"الجهاز المكتشف: " + device;
+
+}
 
 }catch(e){
 
@@ -255,6 +272,7 @@ loading.classList.add("hidden");
 error.classList.remove("hidden");
 
 }
+
 }
 
 function copyLink(){
