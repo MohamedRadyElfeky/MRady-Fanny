@@ -10,98 +10,258 @@ permissions:
 jobs:
   update-version:
     runs-on: ubuntu-latest
+
     steps:
+      # ==========================================
+      # Checkout Repository
+      # ==========================================
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           ref: main
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      # ==========================================
+      # Python
+      # ==========================================
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: "3.x"
 
+      # ==========================================
+      # Generate version.json
+      # ==========================================
       - name: Update version.json
         env:
           RELEASE_TAG: ${{ github.event.release.tag_name }}
           RELEASE_BODY: ${{ github.event.release.body }}
           ASSETS_JSON: ${{ toJson(github.event.release.assets) }}
+        shell: python
         run: |
           import json
           import os
-          import re
+          import sys
 
-          # Load environment variables
-          tag = os.environ['RELEASE_TAG'].replace('v', '') # Remove 'v' prefix if present
-          body = os.environ['RELEASE_BODY']
-          assets = json.loads(os.environ['ASSETS_JSON'])
+          # ==========================================
+          # Helpers
+          # ==========================================
+          def log(msg):
+              print(msg)
 
-          # Define mapping logic
-          urls = {
-              "android_arm64_url": None,
-              "android_arm_url": None,
-              "android_x86_64_url": None,
-              "android_url": None,
-              "windows_url": None,
-              "ios_url": None
-          }
+          def safe_env(name, default=""):
+              return os.environ.get(name, default)
 
-          # Helper to find asset url
+          def normalize_tag(tag):
+              tag = tag.strip()
+              if tag.lower().startswith("v"):
+                  tag = tag[1:]
+              return tag
+
+          def lower_name(asset):
+              return asset.get("name", "").lower()
+
+          def get_url(asset):
+              return asset.get("browser_download_url")
+
+          def has_all(name, keywords):
+              return all(k in name for k in keywords)
+
           def find_asset_url(keywords):
               for asset in assets:
-                  name = asset['name'].lower()
-                  if all(k in name for k in keywords):
-                      return asset['browser_download_url']
+                  name = lower_name(asset)
+                  if has_all(name, keywords):
+                      return get_url(asset)
               return None
 
-          # Find URLs based on naming conventions
-          # Android Split APKs
-          urls['android_arm64_url'] = find_asset_url(['arm64-v8a', '.apk'])
-          urls['android_arm_url'] = find_asset_url(['armeabi-v7a', '.apk'])
-          urls['android_x86_64_url'] = find_asset_url(['x86_64', '.apk'])
-          
-          # Generic/Universal Android APK (fallback)
-          urls['android_url'] = find_asset_url(['release', '.apk'])
-          # If specific universal apk doesn't exist, try to use arm64 as default
-          if not urls['android_url']:
-             urls['android_url'] = urls['android_arm64_url']
+          def find_first_by_ext(exts):
+              for asset in assets:
+                  name = lower_name(asset)
+                  for ext in exts:
+                      if name.endswith(ext):
+                          return get_url(asset)
+              return None
 
-          # Windows
-          urls['windows_url'] = find_asset_url(['.exe'])
+          def add_if(key, value):
+              if value:
+                  data[key] = value
 
-          # Load existing version.json
-          file_path = 'version.json'
+          # ==========================================
+          # Load Release Data
+          # ==========================================
+          try:
+              tag = normalize_tag(safe_env("RELEASE_TAG"))
+              body = safe_env("RELEASE_BODY")
+              assets = json.loads(safe_env("ASSETS_JSON", "[]"))
+          except Exception as e:
+              print(f"Failed loading release data: {e}")
+              sys.exit(1)
+
+          file_path = "version.json"
+
+          # ==========================================
+          # Load Existing version.json
+          # ==========================================
           if os.path.exists(file_path):
-              with open(file_path, 'r', encoding='utf-8') as f:
-                  data = json.load(f)
+              try:
+                  with open(file_path, "r", encoding="utf-8") as f:
+                      data = json.load(f)
+              except:
+                  data = {}
           else:
-              data = {
-                  "min_supported_version": "1.0.0",
-                  "ios_url": ""
-              }
+              data = {}
 
-          # Update data
-          data['latest_version'] = tag
-          data['release_notes'] = body
-          
-          # Only update URLs that were found
-          for key, url in urls.items():
-              if url:
-                  data[key] = url
+          # ==========================================
+          # Defaults
+          # ==========================================
+          data.setdefault("min_supported_version", "1.0.0")
 
-          # Write back to file
-          with open(file_path, 'w', encoding='utf-8') as f:
+          # ==========================================
+          # Remove Old Generated Keys
+          # ==========================================
+          generated_keys = [
+              # Android
+              "android_url",
+              "android_arm64_url",
+              "android_arm_url",
+              "android_x86_64_url",
+              "android_x86_url",
+              "android_bundle_url",
+
+              # iOS
+              "ios_url",
+
+              # Windows
+              "windows_url",
+              "windows_zip_url",
+              "windows_portable_url",
+
+              # Linux
+              "linux_url",
+              "linux_deb_url",
+              "linux_rpm_url",
+              "linux_appimage_url",
+              "linux_tar_url",
+
+              # macOS
+              "macos_url",
+              "macos_dmg_url",
+              "macos_zip_url",
+
+              # Generic
+              "download_url"
+          ]
+
+          for key in generated_keys:
+              data.pop(key, None)
+
+          # ==========================================
+          # Detect Android
+          # ==========================================
+          arm64 = find_asset_url(["arm64-v8a", ".apk"])
+          armv7 = find_asset_url(["armeabi-v7a", ".apk"])
+          x86_64 = find_asset_url(["x86_64", ".apk"])
+          x86 = find_asset_url(["x86", ".apk"])
+
+          universal = (
+              find_asset_url(["universal", ".apk"]) or
+              find_asset_url(["release", ".apk"]) or
+              find_asset_url(["app", ".apk"]) or
+              arm64
+          )
+
+          bundle = find_first_by_ext([".aab"])
+
+          add_if("android_arm64_url", arm64)
+          add_if("android_arm_url", armv7)
+          add_if("android_x86_64_url", x86_64)
+          add_if("android_x86_url", x86)
+          add_if("android_bundle_url", bundle)
+          add_if("android_url", universal)
+
+          # ==========================================
+          # Detect iOS
+          # ==========================================
+          ios = find_first_by_ext([".ipa"])
+          add_if("ios_url", ios)
+
+          # ==========================================
+          # Detect Windows
+          # ==========================================
+          windows_exe = find_first_by_ext([".exe", ".msi"])
+          windows_zip = find_asset_url(["windows", ".zip"]) or find_asset_url(["win", ".zip"])
+
+          add_if("windows_url", windows_exe)
+          add_if("windows_zip_url", windows_zip)
+
+          # ==========================================
+          # Detect Linux
+          # ==========================================
+          linux_deb = find_first_by_ext([".deb"])
+          linux_rpm = find_first_by_ext([".rpm"])
+          linux_appimage = find_first_by_ext([".appimage"])
+          linux_tar = find_asset_url(["linux", ".tar.gz"]) or find_asset_url(["linux", ".zip"])
+
+          add_if("linux_deb_url", linux_deb)
+          add_if("linux_rpm_url", linux_rpm)
+          add_if("linux_appimage_url", linux_appimage)
+          add_if("linux_tar_url", linux_tar)
+
+          linux_main = linux_appimage or linux_deb or linux_rpm or linux_tar
+          add_if("linux_url", linux_main)
+
+          # ==========================================
+          # Detect macOS
+          # ==========================================
+          mac_dmg = find_first_by_ext([".dmg"])
+          mac_zip = find_asset_url(["mac", ".zip"]) or find_asset_url(["macos", ".zip"])
+
+          add_if("macos_dmg_url", mac_dmg)
+          add_if("macos_zip_url", mac_zip)
+
+          mac_main = mac_dmg or mac_zip
+          add_if("macos_url", mac_main)
+
+          # ==========================================
+          # Global Download URL
+          # Priority:
+          # Android > Windows > macOS > Linux > iOS
+          # ==========================================
+          global_url = (
+              data.get("android_url") or
+              data.get("windows_url") or
+              data.get("macos_url") or
+              data.get("linux_url") or
+              data.get("ios_url")
+          )
+
+          add_if("download_url", global_url)
+
+          # ==========================================
+          # Update Core Data
+          # ==========================================
+          data["latest_version"] = tag
+          data["release_notes"] = body.strip()
+
+          # ==========================================
+          # Save JSON
+          # ==========================================
+          with open(file_path, "w", encoding="utf-8") as f:
               json.dump(data, f, indent=2, ensure_ascii=False)
-          
-          print("Updated version.json with:")
-          print(json.dumps(data, indent=2))
 
-        shell: python
+          log("version.json updated successfully")
+          log(json.dumps(data, indent=2, ensure_ascii=False))
 
-      - name: Commit and Push changes
+      # ==========================================
+      # Commit only if changed
+      # ==========================================
+      - name: Commit and Push
         run: |
-          git config --global user.name 'GitHub Action'
-          git config --global user.email 'action@github.com'
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+
           git add version.json
-          git commit -m "chore: update version.json to $RELEASE_TAG"
+
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
+
+          git commit -m "chore: update version.json for ${{ github.event.release.tag_name }}"
           git push origin main
