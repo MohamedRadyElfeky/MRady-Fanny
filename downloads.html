@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-<title>MR | Fanny - Downloads</title>
+<title>MR | Fanny Downloads</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 
@@ -42,7 +42,6 @@ transition:.3s;
 
 <!-- Header -->
 <div class="text-center mb-10">
-
 <div class="text-5xl mb-3">📦</div>
 
 <h1 class="text-3xl font-black text-blue-400">
@@ -52,67 +51,60 @@ MR | Fanny Downloads
 <p class="text-gray-400 mt-2">
 اختر النسخة المناسبة لجهازك
 </p>
-
 </div>
 
-<!-- Device Info -->
+<!-- Device -->
 <div class="glass p-4 rounded-2xl text-center mb-8">
-
-<p id="device" class="text-lg font-bold">
-جاري تحديد الجهاز...
-</p>
-
+<p id="device" class="text-lg font-bold">جاري تحديد الجهاز...</p>
 </div>
 
-<!-- Cards -->
-<div class="grid md:grid-cols-2 gap-5">
-
-<!-- Android -->
-<div class="glass p-5 rounded-2xl card">
-<h2 class="text-xl font-bold">🤖 Android</h2>
-
-<a id="android" class="text-blue-400 mt-2 block">تحميل APK</a>
-
-<p class="text-xs text-gray-400 mt-2">ARM / ARM64 / x86</p>
-</div>
-
-<!-- Windows -->
-<div class="glass p-5 rounded-2xl card">
-<h2 class="text-xl font-bold">🖥 Windows</h2>
-
-<a id="windows" class="text-blue-400 mt-2 block">تحميل EXE</a>
-</div>
-
-<!-- iOS -->
-<div class="glass p-5 rounded-2xl card">
-<h2 class="text-xl font-bold">🍎 iOS</h2>
-
-<a id="ios" class="text-blue-400 mt-2 block">App Store / IPA</a>
-</div>
-
-<!-- Fallback -->
-<div class="glass p-5 rounded-2xl card">
-<h2 class="text-xl font-bold">📱 تحميل عام</h2>
-
-<a id="fallback" class="text-blue-400 mt-2 block">تحميل مباشر</a>
-</div>
-
-</div>
+<!-- Container -->
+<div id="container" class="grid md:grid-cols-2 gap-5"></div>
 
 <!-- Error -->
 <div id="error" class="hidden text-center mt-10">
-
 <div class="text-5xl">⚠️</div>
-
-<p class="text-red-400 mt-3 font-bold">
-لا توجد روابط متاحة
-</p>
-
+<p class="text-red-400 mt-3 font-bold">لا توجد روابط متاحة</p>
 </div>
 
 </div>
 
 <script>
+
+function createCard(title, icon, desc, link){
+
+const div = document.createElement("div");
+div.className = "glass p-5 rounded-2xl card";
+
+div.innerHTML = `
+<h2 class="text-xl font-bold">${icon} ${title}</h2>
+<a href="${link}" target="_blank" class="text-blue-400 mt-2 block">
+تحميل
+</a>
+<p class="text-xs text-gray-400 mt-2">${desc || ""}</p>
+`;
+
+return div;
+}
+
+function getAndroidVersions(data){
+
+const list = [];
+
+if(data.android_arm64_url)
+list.push({name:"ARM64 (v8)", url:data.android_arm64_url});
+
+if(data.android_arm_url)
+list.push({name:"ARM (v7)", url:data.android_arm_url});
+
+if(data.android_x86_64_url)
+list.push({name:"x86_64", url:data.android_x86_64_url});
+
+if(data.android_url && list.length === 0)
+list.push({name:"Universal", url:data.android_url});
+
+return list;
+}
 
 async function load(){
 
@@ -122,60 +114,54 @@ const res = await fetch("./version.json?v=" + Date.now());
 const data = await res.json();
 
 const ua = navigator.userAgent.toLowerCase();
-
 let device = "Unknown Device";
-let link = null;
 
-// Detect Device
-if(ua.includes("android")){
+const container = document.getElementById("container");
+container.innerHTML = "";
+
+// ---------------- ANDROID ----------------
+if(ua.includes("android") || getAndroidVersions(data).length){
+
 device = "Android";
-link = data.android_arm64_url || data.android_url || data.download_url;
-}
-else if(ua.includes("windows")){
-device = "Windows";
-link = data.windows_url || data.download_url;
-}
-else if(ua.includes("iphone") || ua.includes("ipad")){
-device = "iOS";
-link = data.ios_url || data.download_url;
-}
-else if(ua.includes("mac")){
-device = "Mac";
-link = data.download_url;
-}
-else{
-device = "Unknown";
-link = data.download_url;
+
+const androidList = getAndroidVersions(data);
+
+androidList.forEach(v=>{
+container.appendChild(
+createCard("Android", "🤖", v.name, v.url)
+);
+});
 }
 
-// Show device
+// ---------------- WINDOWS ----------------
+if(data.windows_url){
+device = "Windows";
+
+container.appendChild(
+createCard("Windows","🖥","EXE",data.windows_url)
+);
+}
+
+// ---------------- iOS ----------------
+if(data.ios_url){
+device = "iOS";
+
+container.appendChild(
+createCard("iOS","🍎","App Store",data.ios_url)
+);
+}
+
+// ---------------- DEVICE TEXT ----------------
 document.getElementById("device").innerText =
 "الجهاز المكتشف: " + device;
 
-// Set links safely (NO undefined EVER)
-document.getElementById("android").href =
-data.android_url || data.download_url;
-
-document.getElementById("windows").href =
-data.windows_url || data.download_url;
-
-document.getElementById("ios").href =
-data.ios_url || data.download_url;
-
-document.getElementById("fallback").href =
-data.download_url || "#";
-
-// Auto redirect only if valid Android/iOS/Windows link exists
-if(link){
-setTimeout(()=>{
-window.location.href = link;
-},1500);
+// ---------------- ERROR ----------------
+if(!container.children.length){
+document.getElementById("error").classList.remove("hidden");
 }
 
 }catch(e){
-
 document.getElementById("error").classList.remove("hidden");
-
 }
 
 }
