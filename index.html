@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحميل التطبيق</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background-color: #f9f9f9; }
+        .container { background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 600px; margin: auto; }
+        a { color: #0366d6; text-decoration: none; font-weight: bold; }
+        a:hover { text-decoration: underline; }
+        ul { list-style: none; padding: 0; }
+        li { margin: 15px 0; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="container" id="content">
+    <h2>جاري فحص جهازك...</h2>
+    <p>لحظات وسيبدأ تحميل أحدث إصدار تلقائياً.</p>
+</div>
+
+<script>
+    // ⚠️ قم بتغيير هذه القيم لتطابق حسابك واسم المستودع
+    const owner = 'YOUR_GITHUB_NAME'; 
+    const repo = 'YOUR_REPO_NAME';
+
+    async function autoDownload() {
+        const contentDiv = document.getElementById('content');
+        
+        try {
+            // جلب أحدث إصدار من GitHub API
+            const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/releases/latest`);
+            if (!response.ok) throw new Error('Release not found');
+            const data = await response.json();
+            
+            if (!data.assets || data.assets.length === 0) {
+                contentDiv.innerHTML = "<h3>لا توجد ملفات متاحة للتحميل حالياً.</h3>";
+                return;
+            }
+
+            // اكتشاف نظام التشغيل عبر الـ User-Agent
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            let targetExtension = null;
+
+            if (/android/i.test(userAgent)) {
+                targetExtension = '.apk'; // لهواتف أندرويد
+            } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                targetExtension = '.ipa'; // لهواتف الآيفون
+            } else if (/Win/i.test(userAgent)) {
+                targetExtension = '.exe'; // للويندوز
+            } else if (/Mac/i.test(userAgent)) {
+                targetExtension = '.dmg'; // للماك
+            } else if (/Linux/i.test(userAgent)) {
+                targetExtension = '.AppImage'; // للينكس (كمثال)
+            }
+
+            // البحث عن الملف المطابق للامتداد
+            let matchedAsset = null;
+            if (targetExtension) {
+                matchedAsset = data.assets.find(asset => asset.name.toLowerCase().endsWith(targetExtension));
+            }
+
+            // التوجيه التلقائي أو عرض القائمة
+            if (matchedAsset) {
+                contentDiv.innerHTML = `
+                    <h2>تم العثور على الإصدار المناسب!</h2>
+                    <p>جاري التحميل الآن...</p>
+                    <p><a href="${matchedAsset.browser_download_url}">انقر هنا إذا لم يبدأ التحميل التلقائي</a></p>
+                `;
+                // بدء التحميل تلقائياً
+                window.location.href = matchedAsset.browser_download_url;
+            } else {
+                // حالة عدم توافق الجهاز: عرض كل الملفات المتاحة
+                let html = `<h2>لم نتمكن من تحديد إصدار متوافق تلقائياً</h2>`;
+                html += `<p>الإصدار الأخير <b>${data.tag_name}</b> يحتوي على الملفات التالية. اختر ما يناسبك:</p><ul>`;
+                
+                data.assets.forEach(asset => {
+                    const sizeMB = (asset.size / (1024 * 1024)).toFixed(2);
+                    html += `<li>
+                        <a href="${asset.browser_download_url}">${asset.name}</a> 
+                        <br><small>الحجم: ${sizeMB} MB</small>
+                    </li>`;
+                });
+                
+                html += `</ul>`;
+                contentDiv.innerHTML = html;
+            }
+
+        } catch (error) {
+            contentDiv.innerHTML = `
+                <h2>عذراً، حدث خطأ!</h2>
+                <p>لم نتمكن من جلب بيانات التحميل. يرجى زيارة <a href="https://github.com/${owner}/${repo}/releases/latest">صفحة الإصدارات مباشرة</a>.</p>
+            `;
+        }
+    }
+
+    // تشغيل السكربت بمجرد تحميل الصفحة
+    window.onload = autoDownload;
+</script>
+
+</body>
+</html>
