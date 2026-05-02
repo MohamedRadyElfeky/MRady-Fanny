@@ -1,80 +1,152 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-
-<title>MR | Fanny - Downloads</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
+<title>MR | Fanny Downloads</title>
 
 <style>
-body{
-background:linear-gradient(135deg,#020617,#0f172a,#111827);
-font-family:tahoma;
-color:white;
+body {
+    margin:0;
+    font-family: Arial;
+    background: linear-gradient(135deg,#0b1020,#0f1b35);
+    color:white;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+    padding:30px;
+}
+
+.header{
+    text-align:center;
+    margin-bottom:40px;
 }
 
 .card{
-background:rgba(255,255,255,0.06);
-backdrop-filter:blur(12px);
-border:1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.06);
+    padding:20px;
+    border-radius:16px;
+    margin-bottom:15px;
+    backdrop-filter: blur(10px);
+    transition:0.3s;
+}
+
+.card:hover{
+    transform: scale(1.02);
+}
+
+.platform-title{
+    font-size:20px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.btn{
+    display:inline-block;
+    padding:10px 15px;
+    background:#4f7cff;
+    color:white;
+    border-radius:10px;
+    text-decoration:none;
+    margin-top:10px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:15px;
+}
+
+.hidden{
+    display:none;
 }
 </style>
-
 </head>
 
-<body class="p-6">
+<body>
 
-<div class="max-w-4xl mx-auto">
+<div class="container">
 
-<h1 class="text-3xl font-bold text-center mb-8">
-📦 تحميل MR | Fanny
-</h1>
+    <div class="header">
+        <h1 id="appName">Loading...</h1>
+        <p>اختر النسخة المناسبة لجهازك</p>
+    </div>
 
-<p class="text-center text-gray-400 mb-10">
-اختر النسخة المناسبة لجهازك
-</p>
+    <!-- Android -->
+    <div id="androidSection" class="grid hidden">
+        <h2>🤖 Android Versions</h2>
+        <div id="androidList"></div>
+    </div>
 
-<!-- Android -->
-<div class="card p-5 rounded-2xl mb-4">
-<h2 class="text-xl font-bold">🤖 Android</h2>
-<a id="android" class="text-blue-400">تحميل APK</a>
-</div>
+    <!-- Windows -->
+    <div id="windowsSection" class="card hidden"></div>
 
-<!-- Windows -->
-<div class="card p-5 rounded-2xl mb-4">
-<h2 class="text-xl font-bold">🖥 Windows</h2>
-<a id="windows" class="text-blue-400">تحميل EXE</a>
-</div>
+    <!-- iOS -->
+    <div id="iosSection" class="card hidden"></div>
 
-<!-- iOS -->
-<div class="card p-5 rounded-2xl mb-4">
-<h2 class="text-xl font-bold">🍎 iOS</h2>
-<a id="ios" class="text-blue-400">تحميل / App Store</a>
-</div>
-
-<!-- Mac -->
-<div class="card p-5 rounded-2xl mb-4">
-<h2 class="text-xl font-bold">💻 Mac</h2>
-<a id="mac" class="text-blue-400">تحميل DMG</a>
-</div>
+    <!-- Mac -->
+    <div id="macSection" class="card hidden"></div>
 
 </div>
 
 <script>
+fetch('versions.json')
+.then(res => res.json())
+.then(data => {
 
-fetch("./version.json")
-.then(r=>r.json())
-.then(data=>{
+    document.getElementById("appName").innerText = data.app_name;
 
-document.getElementById("android").href = data.android_url || "#";
-document.getElementById("windows").href = data.windows_url || "#";
-document.getElementById("ios").href = data.ios_url || "#";
-document.getElementById("mac").href = data.mac_url || "#";
+    // ANDROID MULTI
+    if(data.platforms.android && data.platforms.android.length > 0){
+        document.getElementById("androidSection").classList.remove("hidden");
+
+        let html = "";
+        data.platforms.android.forEach(app => {
+            html += `
+            <div class="card">
+                <div class="platform-title">${app.name}</div>
+                <div>Version: ${app.version}</div>
+                <div>Size: ${app.size}</div>
+                <a class="btn" href="${app.file}">Download APK</a>
+            </div>`;
+        });
+
+        document.getElementById("androidList").innerHTML = html;
+    }
+
+    // WINDOWS
+    if(data.platforms.windows){
+        document.getElementById("windowsSection").classList.remove("hidden");
+        document.getElementById("windowsSection").innerHTML = `
+            <div class="platform-title">🪟 Windows</div>
+            <div>Version: ${data.platforms.windows.version}</div>
+            <div>Size: ${data.platforms.windows.size}</div>
+            <a class="btn" href="${data.platforms.windows.file}">Download EXE</a>
+        `;
+    }
+
+    // IOS
+    if(data.platforms.ios && data.platforms.ios.available){
+        document.getElementById("iosSection").classList.remove("hidden");
+        document.getElementById("iosSection").innerHTML = `
+            <div class="platform-title">🍎 iOS</div>
+            <a class="btn" href="${data.platforms.ios.store}">Open App Store</a>
+        `;
+    }
+
+    // MAC
+    if(data.platforms.mac){
+        document.getElementById("macSection").classList.remove("hidden");
+        document.getElementById("macSection").innerHTML = `
+            <div class="platform-title">💻 Mac</div>
+            <div>Version: ${data.platforms.mac.version}</div>
+            <div>Size: ${data.platforms.mac.size}</div>
+            <a class="btn" href="${data.platforms.mac.file}">Download DMG</a>
+        `;
+    }
 
 });
-
 </script>
 
 </body>
