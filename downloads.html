@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>MR | Fanny - Downloads</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+body{
+background:linear-gradient(135deg,#020617,#0f172a,#111827);
+font-family:tahoma;
+color:white;
+}
+
+.card{
+background:rgba(255,255,255,0.06);
+backdrop-filter:blur(12px);
+border:1px solid rgba(255,255,255,0.08);
+}
+</style>
+
+</head>
+
+<body class="p-6">
+
+<div class="max-w-4xl mx-auto">
+
+<h1 class="text-3xl font-bold text-center mb-8">
+📦 تحميل MR | Fanny
+</h1>
+
+<p class="text-center text-gray-400 mb-10">
+اختر النسخة المناسبة لجهازك
+</p>
+
+<!-- Android -->
+<div class="card p-5 rounded-2xl mb-4">
+<h2 class="text-xl font-bold">🤖 Android</h2>
+<a id="android" class="text-blue-400">تحميل APK</a>
+</div>
+
+<!-- Windows -->
+<div class="card p-5 rounded-2xl mb-4">
+<h2 class="text-xl font-bold">🖥 Windows</h2>
+<a id="windows" class="text-blue-400">تحميل EXE</a>
+</div>
+
+<!-- iOS -->
+<div class="card p-5 rounded-2xl mb-4">
+<h2 class="text-xl font-bold">🍎 iOS</h2>
+<a id="ios" class="text-blue-400">تحميل / App Store</a>
+</div>
+
+<!-- Mac -->
+<div class="card p-5 rounded-2xl mb-4">
+<h2 class="text-xl font-bold">💻 Mac</h2>
+<a id="mac" class="text-blue-400">تحميل DMG</a>
+</div>
+
+</div>
+
+<script>
+
+fetch("./version.json")
+.then(r=>r.json())
+.then(data=>{
+
+document.getElementById("android").href = data.android_url || "#";
+document.getElementById("windows").href = data.windows_url || "#";
+document.getElementById("ios").href = data.ios_url || "#";
+document.getElementById("mac").href = data.mac_url || "#";
+
+});
+
+</script>
+
+</body>
+</html>
